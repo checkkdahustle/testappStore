@@ -20,6 +20,5 @@ module.exports = function() {
   return {
     create: _create,
     destroy: _destroy,
-    
   }
 }();

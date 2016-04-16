@@ -1,7 +1,7 @@
 module.exports = function() {
   var db = require('./db.js');
   var sequelize = db.connection;
-  var util = require('../../lib/util'); 
+  var util = require('../../lib/util');
 
   function _create(payload, err, success) {
     var cleanData = payload;

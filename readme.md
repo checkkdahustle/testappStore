@@ -14,9 +14,6 @@ Added comments to index.js file.
 Created middleware function to store rawRoute to database.
 Created histories.js file to talk to the database.
 
->>>>>>>Added comments to index.js file.
->>>>>>>Created middleware function to store rawRoute to database.
->>>>>>>created histories.js file to talk to the database.
 
 
 ### Issues to take note of
