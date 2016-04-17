@@ -1,11 +1,10 @@
 module.exports = function(express) {
-  var express = require('express');
   var histories = require('../models/histories.js');
   var db = require('../models/db.js');
   var router = express.Router();
 
 
-// NOTES___________________________________________________
+// NOTES
 // made a variable point to histories.js in model folder
 // middleware function is placed after the route.get
 // ^^ because middleware won’t execute for GET requests
@@ -35,7 +34,7 @@ module.exports = function(express) {
 */
 // Route for JSDocs
   router.use('/api', express.static(__dirname + '/out'));
-  
+
 // Routes
 
   router.use('/api/', require('./api/user')(express));
