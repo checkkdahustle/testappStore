@@ -12,7 +12,7 @@ module.exports = function() {
   function _create(payload, err, success)
   {
     var cleanData = payload;
-    db.appAsset.create(cleanData).then(success).catch(err);
+    db.voting.create(cleanData).then(success).catch(err);
   }
 
   /*
@@ -23,12 +23,12 @@ module.exports = function() {
 
   function _update(payload, err, success) {
     var cleanData = payload;
-    db.appAsset.find({
+    db.voting.find({
       where: {
         id: cleanData.id
       }
-    }).then(function(matchedAppAsset) {
-      matchedAppAsset.updateAttributes(payload).then(success).catch(err);
+    }).then(function(matchedvoting) {
+      matchedvoting.updateAttributes(payload).then(success).catch(err);
     }).catch(err);
   }
 
@@ -38,9 +38,9 @@ module.exports = function() {
     todos' research line 41 and lines 43 - 51
   */
   function _find(payload, err, success) {
-    util.debug('App Asset Model _Find Payload', payload);
+    util.debug('Voting Model _Find Payload', payload)
     var cleanData = payload;
-    db.appAsset.find({
+    db.voting.find({
       where: {
         id: cleanData.id
       },
@@ -56,7 +56,7 @@ module.exports = function() {
     todo's research lines 59 - 64
   */
   function _findAll(err, success) {
-    db.appAsset.findAll({
+    db.voting.findAll({
       include: [{
         all: true,
         nested: true
@@ -72,7 +72,7 @@ module.exports = function() {
 
   function _destroy(payload, err, success) {
     var cleanData = payload;
-    db.appAsset.destroy({
+    db.voting.destroy({
       where: {
         id: cleanData.id
       },
@@ -91,5 +91,5 @@ module.exports = function() {
     find: _find,
     findAll: _findAll,
     destroy: _destroy,
-  };
+  }
 }();

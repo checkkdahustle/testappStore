@@ -1,108 +1,168 @@
-var request = require('supertest');
+var expect = require('chai').expect;
 var faker = require('faker');
 var util = require('../lib/util.js');
 
-describe('API: App Asset Routes', function() {
-  var server;
-  var testingObjData = {
-    app_id: '075d3674-e0b4-47f2-9428-d28fb1d53604',
-    link: faker.image.imageUrl(),
-    type: 'image'
-  }
+var app_asset = require('../src/models/app_asset');
+var app = require('../src/models/app');
+var user = require('../src/models/user');
 
-  var testingObj;
+var userData = {
+  dispName: faker.name.findName(),
+  email: faker.internet.email(),
+  password: 'unhash',
+  phone: faker.phone.phoneNumber()
+};
 
-  // Before / After each test create / destroy the express server to fully simulate unique requests.
-  // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  beforeEach(function() {
-    server = require('../src/server.js');
-  });
-  afterEach(function() {
-    server.close();
-  });
+var appData = {
+  title: faker.commerce.productName()
+};
 
-  // App Asset Create One
-  it('App Asset Create One', function(done) {
-    request(server)
-      .put('/api/app/' + testingObjData.app_id + '/asset')
-      .set('Accept', 'application/json')
-      .send(testingObjData)
-      .expect('Content-Type', /json/)
-      .expect(function(res) {
-        util.debug('App Asset Create Route Request Data', testingObjData);
-        util.debug('App Asset Create Route Response', res.body);
+var appAssetData = {
+  link: faker.internet.url()
+};
 
-        if (!util.hayTest(testingObjData, res.body)) throw new Error('hayTest has concluded that data sent to and received from the server does not match.');
+describe('Model: App Assets ', function() {
+  // User Create One
+  it('Creating a User as Owner for the App Assets', function(done) {
+    user.create(userData,
 
-        // Save info about the created as our Testing Object
-        testingObj = res.body;
-      })
-      .expect(200, done);
-  });
+    // On Error
+    (err) => {
+      util.debug('User Create Error', err);
+      throw new Error('User Create Error');
+    },
 
-  // App Asset Update One
-  it('App Asset Update', function(done) {
-    var payload = testingObj;
-    payload.link = faker.image.imageUrl() + '?update=true';
-    request(server)
-      .put('/api/app/' + testingObjData.app_id + '/asset/' + payload.id.toString())
-      .set('Accept', 'application/json')
-      .send(payload)
-      .expect('Content-Type', /json/)
-      .expect(function(res) {
-        util.debug('App Asset Update Payload', payload);
-        util.debug('App Asset Update Route Response', res.body);
+    // On Success
+    (data) => {
+      util.debug('User Create Success', data);
 
-        if (!util.hayTest(payload, res.body)) throw new Error('hayTest has concluded that data sent to and received from the server does not match.');
-      })
-      .expect(200, done);
+      // Overwrite the returned obj to userData
+      appData.user_id = userData.id;
+      expect(data.dispName).to.be.equal(data.dispName);
+      done();
+    });
   });
 
-  // App Asset Read One
-  it('App Asset Read One', function(done) {
-    request(server)
-      .get('/api/asset/' + testingObj.id.toString())
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(function(res) {
-        util.debug('App Asset Read Testing Data', testingObj);
-        util.debug('App Asset Read Route Response', res.body);
 
-        if (!util.hayTest(testingObj, res.body)) throw new Error('hayTest has concluded that data sent to and received from the server does not match.');
-      })
-      .expect(200, done);
+  // App  Create One
+  it('Create One App', function(done) {
+    app.create(appData,
+
+    // On Error
+    (err) => {
+      util.debug('App Create Error', err);
+      throw new Error('App Create Error');
+    },
+
+    // On Success
+    (data) => {
+      util.debug('App Create Success', data);
+
+      // Overwrite the returned obj to appAssetData
+      expect(data.title).to.be.equal(appData.title);
+      appData = data;
+      appAssetData.app_id = data.id;
+      done();
+    });
   });
 
-  // App Asset Read All
-  it('App Asset Read All', function(done) {
-    request(server)
-      .get('/api/assets')
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(function(res) {
-        util.debug('App Asset Read All Route Response', res.body);
+  // App Assets Create One
+  it('Create App Asset', function(done) {
+    app_asset.create(appAssetData,
 
-        if (res.body.length < 1) throw new Error('Less than 1 entry in the App Asset Table');
-      })
-      .expect(200, done);
+    // On Error
+    (err) => {
+      util.debug('App Create Error', err);
+      throw new Error('App Create Error');
+    },
+
+    // On Success
+    (data) => {
+      util.debug('App Create Success', data);
+
+      // Overwrite the returned obj to appAssetData
+      expect(data.link).to.be.equal(appAssetData.link);
+      appAssetData = data;
+      done();
+    });
   });
 
-  // App Asset Destroy
-  it('App Asset Destroy', function(done) {
-    request(server)
-      .delete('/api/app/' + testingObjData.app_id + '/asset/' + testingObj.id.toString())
-      .set('Accept', 'application/json')
-      .send({
-        force: true
-      })
-      .expect('Content-Type', /json/)
-      .expect(function(res) {
-        util.debug('App Asset Delete App Asset Data', testingObj);
-        util.debug('App Asset Delete Route Response', res.body);
+  // App Assets Read One
+  it('Read One', function(done) {
+    app_asset.find(appAssetData,
 
-        if (!res.body.success) throw new Error('Destroy did not correctly work');
-      })
-      .expect(200, done);
+    // On Error
+    (err) => {
+      util.debug('App Assets Read One Error', err);
+      throw new Error('App Assets Read One Error');
+    },
+
+    // On Success
+    (data) => {
+      util.debug('App Assets Read One Success', data);
+      expect(data.link).to.be.equal(appAssetData.link);
+      done();
+    });
   });
 
+  // App Assets Read All
+  it('Read All', function(done) {
+    app_asset.findAll(
+
+    // On Error
+    (err) => {
+      util.debug('App Assets Read All Error', err);
+      throw new Error('App Assets Read All Error');
+    },
+
+    // On Success
+    (data) => {
+      util.debug('App Assets Read All Success', data);
+      expect(data.length).to.be.above(0);
+      done();
+    });
+  });
+
+  // App Assets Update One
+  it('Update One', function(done) {
+    var updateInfo = {id: appAssetData.id, title: 'xx Force Update xx'};
+    app_asset.update(updateInfo,
+
+    // On Error
+    (err) => {
+      util.debug('App Assets Update One Error', err);
+      throw new Error('App Assets Update One Error');
+    },
+
+    // On Success
+    (data) => {
+      // Overwrite the returned obj to appAssetData
+      appAssetData = data;
+
+      util.debug('App Assets Update One Success', data);
+      expect(data.dispName).to.be.equal(updateInfo.dispName);
+      done();
+    });
+  });
+
+  // App Assets Delete
+  it('Delete One', function(done) {
+
+    appAssetData.force = true;
+    app_asset.destroy(appAssetData,
+
+    // On Error
+    (err) => {
+      util.debug('App Assets Delete One Error', err);
+      throw new Error('App Assets Delete One Error');
+    },
+
+    // On Success
+    (data) => {
+      util.debug('App Assets Delete One Success', data);
+      //Successfully deleting a record results in a bool response of 1
+      expect(data).to.be.equal(1);
+      done();
+    });
+  });
 });

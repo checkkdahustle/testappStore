@@ -10,9 +10,9 @@ module.exports = function(express) {
 // ^^ because middleware won’t execute for GET requests
 // will fire on every route that comes thru express
 
-/*
-    ********************************************************
-*/
+  /*
+  ********************************************************
+  */
 
   // Standard Routes
   router.get('/', function(req, res) {
@@ -28,29 +28,21 @@ module.exports = function(express) {
     });
   });
 
-
-/*
-  ********************************************************
-*/
-// Route for JSDocs
-  router.use('/api', express.static(__dirname + '/out'));
-
 // Routes
-
+  router.use('/jsdoc', express.static(__dirname + './../../build/JSdocs')); // JSdoc route
   router.use('/api/', require('./api/user')(express));
   router.use('/api/', require('./api/app')(express));
   router.use('/api/', require('./api/app_assets')(express));
   router.use('/api/', require('./api/list')(express));
   router.use('/api/', require('./api/listed_apps')(express));
+  router.use('/api/', require('./api/recommend')(express));
 
-/*
-  ********************************************************
-*/
-// MIDDLE-WARE
-// used the existing module on index.js to add track user browsering in the url.
-// this middleware function has no mount path.
-// this code is executed for every request to the router.
-// rawRoute of url is stored in database.
+
+  // MIDDLE-WARE
+  // used the existing module on index.js to add track user browsering in the url.
+  // this middleware function has no mount path.
+  // this code is executed for every request to the router.
+  // rawRoute of url is stored in database.
   router.use(function (req, res, next) {
     var payload = req.body;
     // create full rawRoute of the url and store in db
@@ -63,5 +55,5 @@ module.exports = function(express) {
       next(); // end the request
     });
   });
-    return router;
+  return router;
 };

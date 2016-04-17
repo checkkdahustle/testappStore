@@ -15,8 +15,8 @@ module.exports = function() {
       where: {
         id: cleanData.id
       }
-    }).then(function(matchedapp) {
-      matchedapp.updateAttributes(cleanData).then(success).catch(err);
+    }).then(function(matchedhistories) {
+      matchedhistories.updateAttributes(cleanData).then(success).catch(err);
     }).catch(err);
   }
 // Find

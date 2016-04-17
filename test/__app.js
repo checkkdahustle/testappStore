@@ -1,105 +1,142 @@
-var request = require('supertest');
+var expect = require('chai').expect;
 var faker = require('faker');
 var util = require('../lib/util.js');
 
-describe('API: App Routes', function() {
-  var server;
-  var testingObjData = {
-    title: faker.company.companyName(),
-    description: faker.company.bs(),
-    user_id: '3341f2aa-c8dd-465c-b6c8-a793d4426db9'
-  }
+var app = require('../src/models/app');
+var user = require('../src/models/user');
 
-  var testingObj;
+var userData = {
+  dispName: faker.name.findName(),
+  email: faker.internet.email(),
+  password: 'unhash',
+  phone: faker.phone.phoneNumber()
+};
 
-  // Before / After each test create / destroy the express server to fully simulate unique requests.
-  // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  beforeEach(function() {
-    server = require('../src/server.js');
+var appData = {
+  title: faker.commerce.productName()
+};
+
+describe('Model: App ', function() {
+  // User Create One
+  it('Creating a User as Owner for the App', function(done) {
+    user.create(userData,
+
+    // On Error
+    (err) => {
+      util.debug('User Create Error', err);
+      throw new Error('User Create Error');
+    },
+
+    // On Success
+    (data) => {
+      util.debug('User Create Success', data);
+
+      // Overwrite the returned obj to userData
+      userData = data;
+      appData.user_id = userData.id;
+      expect(data.dispName).to.be.equal(userData.dispName);
+      done();
+    });
   });
-  afterEach(function() {
-    server.close();
-  });
+
 
   // App Create One
-  it('App Create One', function(done) {
-    request(server)
-      .put('/api/app')
-      .set('Accept', 'application/json')
-      .send(testingObjData)
-      .expect('Content-Type', /json/)
-      .expect(function(res) {
-        if (!util.hayTest(testingObjData, res.body)) throw new Error('hayTest has concluded that data sent to and received from the server does not match.');
+  it('Create One', function(done) {
+    app.create(appData,
 
-        util.debug('App Create Route Request Data', testingObjData);
-        util.debug('App Create Route Response', res.body);
+    // On Error
+    (err) => {
+      util.debug('App Create Error', err);
+      throw new Error('App Create Error');
+    },
 
-        // Save info about the created as our Testing Object
-        testingObj = res.body;
-      })
-      .expect(200, done);
-  });
+    // On Success
+    (data) => {
+      util.debug('App Create Success', data);
 
-  // App Update One
-  it('App Update', function(done) {
-    var payload = testingObj;
-    var testingObjDataKeys = Object.keys(testingObjData);
-    payload[testingObjDataKeys[0]] = faker.company.bs();
-    request(server)
-      .put('/api/app/' + payload.id.toString())
-      .set('Accept', 'application/json')
-      .send(payload)
-      .expect('Content-Type', /json/)
-      .expect(function(res) {
-        if (!util.hayTest(payload, res.body)) throw new Error('hayTest has concluded that data sent to and received from the server does not match.');
-        util.debug('App Update Payload', payload);
-        util.debug('App Update Route Response', res.body);
-      })
-      .expect(200, done);
+      // Overwrite the returned obj to appData
+      appData = data;
+      expect(data.dispName).to.be.equal(appData.dispName);
+      done();
+    });
   });
 
   // App Read One
-  it('App Read One', function(done) {
-    request(server)
-      .get('/api/app/' + testingObj.id.toString())
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(function(res) {
-        if (!util.hayTest(testingObj, res.body)) throw new Error('hayTest has concluded that data sent to and received from the server does not match.');
-        util.debug('App Read Testing Data', testingObj);
-        util.debug('App Read Route Response', res.body);
-      })
-      .expect(200, done);
+  it('Read One', function(done) {
+    app.find(appData,
+
+    // On Error
+    (err) => {
+      util.debug('App Read One Error', err);
+      throw new Error('App Read One Error');
+    },
+
+    // On Success
+    (data) => {
+      util.debug('App Read One Success', data);
+      expect(data.dispName).to.be.equal(appData.dispName);
+      done();
+    });
   });
 
   // App Read All
-  it('App Read All', function(done) {
-    request(server)
-      .get('/api/apps')
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(function(res) {
-        if (res.body.length < 1) throw new Error('Less than 1 entry in the App Table');
-        util.debug('App Read All Route Response', res.body);
-      })
-      .expect(200, done);
+  it('Read All', function(done) {
+    app.findAll(
+
+    // On Error
+    (err) => {
+      util.debug('App Read All Error', err);
+      throw new Error('App Read All Error');
+    },
+
+    // On Success
+    (data) => {
+      util.debug('App Read All Success', data);
+      expect(data.length).to.be.above(0);
+      done();
+    });
   });
 
-  // App Destroy
-  it('App Destroy', function(done) {
-    request(server)
-      .delete('/api/app/' + testingObj.id.toString())
-      .set('Accept', 'application/json')
-      .send({
-        force: true
-      })
-      .expect('Content-Type', /json/)
-      .expect(function(res) {
-        if (!res.body.success) throw new Error('Destroy did not correctly work');
-        util.debug('App Delete App Data', testingObj);
-        util.debug('App Delete Route Response', res.body);
-      })
-      .expect(200, done);
+  // App Update One
+  it('Update One', function(done) {
+    var updateInfo = {id: appData.id, title: 'xx Force Update xx'};
+    app.update(updateInfo,
+
+    // On Error
+    (err) => {
+      util.debug('App Update One Error', err);
+      throw new Error('App Update One Error');
+    },
+
+    // On Success
+    (data) => {
+      // Overwrite the returned obj to appData
+      appData = data;
+
+      util.debug('App Update One Success', data);
+      expect(data.dispName).to.be.equal(updateInfo.dispName);
+      done();
+    });
   });
 
+  // App Delete
+  it('Delete One', function(done) {
+
+    appData.force = true;
+    app.destroy(appData,
+
+    // On Error
+    (err) => {
+      util.debug('App Delete One Error', err);
+      throw new Error('App Delete One Error');
+    },
+
+    // On Success
+    (data) => {
+      util.debug('App Delete One Success', data);
+      //Successfully deleting a record results in a bool response of 1
+      expect(data).to.be.equal(1);
+      done();
+    });
+  });
 });

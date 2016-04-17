@@ -1,0 +1,7 @@
+{
+  //  "camelcase": true,
+    "mocha": true,
+    "node": false,
+    "esnext": true,
+    "loopfunc": true
+}

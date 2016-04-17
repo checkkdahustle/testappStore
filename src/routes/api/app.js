@@ -18,18 +18,6 @@ module.exports = function (express) { // Setting module.exports to a new functio
 
 */
 
-  //JSdocs index route
-  router.get('/home', function(req,res){
-    res.sendFile(__dirname + '/out/index.html');
-  });
-  router.get('/global', function(req,res){
-    res.sendFile(__dirname + '/out/global.html');
-  });
-
-  router.get('/server', function(req,res){
-    res.sendFile(__dirname + '/out/server.js.html');
-  });
-
   // Read One
   router.get('/app/:id', function(req, res) {
     req.body.id = req.params.id;

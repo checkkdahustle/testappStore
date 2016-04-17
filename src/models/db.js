@@ -9,6 +9,10 @@
 module.exports = function() {
   var Sequelize = require('sequelize');
   var mysql = require('mysql');
+
+  // Dot Env File Loader
+  if (!process.env.PORT) dotenv = require('dotenv').load();
+
   var _sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
     host: process.env.DB_HOST,
     dialect: process.env.DB_SCHEMA,
@@ -119,7 +123,22 @@ module.exports = function() {
     type: {
       type: Sequelize.ENUM,
       values: ['google', 'twitter', 'facebook']
+    }
+  }, {
+    paranoid: true
+  });
+
+  // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+  //    Voting
+  // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+  var _voting = _sequelize.define('voting', {
+    type: {
+      type: Sequelize.ENUM,
+      values: ['image', 'YouTube', 'other']
     },
+    link: {
+      type: Sequelize.STRING
+    }
   }, {
     paranoid: true
   });
@@ -204,7 +223,7 @@ module.exports = function() {
     },
     releaseDate: {
       type: Sequelize.DATE
-    },
+    }
   }, {
     paranoid: true
   });
@@ -224,19 +243,7 @@ module.exports = function() {
     },
     target: {
       type: Sequelize.STRING
-    },
-  }, {
-    paranoid: true
-  });
-
-  // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  //    Voting
-  // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  var _voting = _sequelize.define('voting', {
-    choice: {
-      type: Sequelize.ENUM,
-      values: ['option1', 'option2', 'option3']
-    },
+    }
   }, {
     paranoid: true
   });
@@ -297,6 +304,6 @@ module.exports = function() {
     appAsset: _appAsset,
     list: _list,
     listedApp: _listedApp,
-    role: _role
-  }
+    role: _role,
+  };
 }();

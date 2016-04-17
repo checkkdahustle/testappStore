@@ -10,7 +10,7 @@ module.exports = function() {
 
   function _destroy(payload, err, success) {
     var cleanData = payload;
-    util.debug('Listed Apps Model Destroy Payload')
+    util.debug('Listed Apps Model Destroy Payload', cleanData);
     db.listedApp.destroy({
       where: cleanData,
       force: payload.force
@@ -20,6 +20,5 @@ module.exports = function() {
   return {
     create: _create,
     destroy: _destroy,
-    
-  }
+  };
 }();
