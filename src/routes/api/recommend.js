@@ -86,8 +86,8 @@ ger.initialize_namespace('sports')//bucket of events with name sport. other buck
   return ger.recommendations_for_thing(sports, thing, {actions: {likes: 1}})
 })
 .then( function(recommendations) {
-  console.log("\nRecommendations Like %s", thing)
-  console.log(JSON.stringify(recommendations,null,5))
+   console.log("\nRecommendations Like %s", thing)
+   console.log(JSON.stringify(recommendations,null,5))
 })
 return router;
 }

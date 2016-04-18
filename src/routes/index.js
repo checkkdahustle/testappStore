@@ -1,6 +1,7 @@
 module.exports = function(express) {
-  var histories = require('../models/histories.js');
-  var db = require('../models/db.js');
+  var histories = require('../models/histories'); // histories tag will be changed to tracking
+  // var path = require('path');
+  var db = require('../models/db');
   var router = express.Router();
 
 
