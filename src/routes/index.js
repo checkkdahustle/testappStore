@@ -1,9 +1,9 @@
 module.exports = function(express) {
-  var express = require('express');
+  // var express = require('express');
   var histories = require('../models/histories');
-  var recommend = require('../models/recommend');
+  // var recommend = require('../models/recommend');
   var db = require('../models/db');
-  var fs=require('fs'); //read from index file in public folder
+  var fs = require('fs'); //read from index file in public folder
   var router = express.Router();
 
 
@@ -22,17 +22,15 @@ module.exports = function(express) {
 
   // Standard Routes
   router.get('/', function(req, res) {
+    // res.status(200).json({
+    //   msg: 'Hello World',
+    //   healthy: true
+    // });
 
     //display recommend.html as homepage view by pipeing to client
     fs.createReadStream(__dirname+"/public/index.html").pipe(res);
   });
 
-  // router.get('/', function(req, res) {
-  //   res.status(200).json({
-  //     msg: 'Hello World',
-  //     healthy: true
-  //   });
-  // });
 
   router.get('/status', function(req, res) {
 
