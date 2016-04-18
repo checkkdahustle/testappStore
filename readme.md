@@ -19,7 +19,7 @@ For dev dependencies
 npm install dependencyName --save-dev --save-exact
 ```
 
-#### jsdoc Installation
+### jsdoc Installation
 
 Globally install jsdoc
 
@@ -27,29 +27,61 @@ Globally install jsdoc
 npm install -g jsdoc
 ```
 
-##### gulp Installation
+### gulp Installation
 
 Install dev dependencies for gulp
 
 ```
 npm install --save-dev gulp gulp-nodemon gulp-shell gulp-clean
 ```
-##### ger and coffee-script Installation
 
-Good Enough recommendations(GER) - collaborative filtering
+### [GER](https://github.com/grahamjenson/ger) usage
+
+#### Good Enough recommendations(GER) - collaborative filtering
+
+* used for recommendation algorithm
+* dependent on data from: *game voting, game genres, user degree, user download and viewing histories*
+
+GER can generate recommendations for a person, e.g. *what would alice like?*
 
 ```
-npm install ger --save
+ger.recommendations_for_person('movies', 'alice', {actions: {likes: 1}
 ```
-###### Run Server
 
-To run the server now in terminal...
+also recommendations for a thing, e.g. *what would a person who likes xmen like?*
+
+```
+ger.recommendations_for_thing('movies', 'xmen', {actions: {likes: 1}})
+```
+
+#### important details
+* The first result is the most recommended followed by the next result and etc.
+* confidence - variable that quantifies what 'thing' to first recommend.
+* neighbourhood - variable that quantifies the amount of users who 'like' the same 'thing' (or in this case, game);
+
+
+### fs usage
+
+fs is native to node. no installation needed.
+fs needs to be required.
+
+```
+var fs=require('fs');
+```
+fs will read and write to file systems.
+Use fs to write to your views.
+
+create your views in the public folder.
+
+## Run Server
+
+#### To run the server now in terminal...
 
 ```
 gulp
 ```
 
-####### Out Folder
+##### Out Folder
 
 When you gulp or jsdoc filepath/To/jsfile.js you'll get an out folder.
 The out folder is the documentation.

@@ -1,15 +1,20 @@
 module.exports = function(express) {
-  var histories = require('../models/histories'); // histories tag will be changed to tracking
-  // var path = require('path');
+  var express = require('express');
+  var histories = require('../models/histories');
+  var recommend = require('../models/recommend');
   var db = require('../models/db');
+  var fs=require('fs'); //read from index file in public folder
   var router = express.Router();
 
 
-// NOTES
-// made a variable point to histories.js in model folder
-// middleware function is placed after the route.get
-// ^^ because middleware won’t execute for GET requests
-// will fire on every route that comes thru express
+
+  // NOTES___________________________________________________
+  // made a variable point to histories.js in model folder
+  // middleware function is placed after the route.get
+  // ^^ because middleware won’t execute for GET requests
+  // will fire on every route that comes thru express
+
+  //created a homepage view to test bootstrap and routing connection
 
   /*
   ********************************************************
@@ -17,13 +22,20 @@ module.exports = function(express) {
 
   // Standard Routes
   router.get('/', function(req, res) {
-    res.status(200).json({
-      msg: 'Hello World',
-      healthy: true
-    });
+
+    //display recommend.html as homepage view by pipeing to client
+    fs.createReadStream(__dirname+"/public/index.html").pipe(res);
   });
 
+  // router.get('/', function(req, res) {
+  //   res.status(200).json({
+  //     msg: 'Hello World',
+  //     healthy: true
+  //   });
+  // });
+
   router.get('/status', function(req, res) {
+
     res.status(200).json({
       healthy: true
     });
@@ -36,7 +48,7 @@ module.exports = function(express) {
   router.use('/api/', require('./api/app_assets')(express));
   router.use('/api/', require('./api/list')(express));
   router.use('/api/', require('./api/listed_apps')(express));
-  router.use('/api/', require('./api/recommend')(express));
+  // router.use('/api/', require('./api/recommend')(express));
 
 
   // MIDDLE-WARE

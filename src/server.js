@@ -1,6 +1,5 @@
 var express = require('express'); // Sets variable express to express module
 var body_parser = require('body-parser'); // Sets variable body_parser to body-parser module
-
 var app = express(); // Sets variable app to express function
 
 // Dot Env File Loader
@@ -19,5 +18,6 @@ app.use('/', require('./routes')(express)); // Tells app to look for routes in t
 var server = app.listen(port, function() {
   if (process.env.DEBUG) console.log('Server Active On', port);
 });
+
 
 module.exports = server;
